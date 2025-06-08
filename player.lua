@@ -7,7 +7,7 @@ function PlayerClass:new(name)
   setmetatable(player, metadata)
   
   player.name = name
-  player.mana = 0
+  player.mana = 20
   player.points = 0
   player.cards = {
     WoodenCowClass:new(name),
@@ -37,24 +37,24 @@ function PlayerClass:new(name)
   require "discardPile"
   
   if name == "p1" then
-    local handX = 300
+    local handX = 350
     local handY = 700
     player.hand = HandClass:new(handX, handY, name)
-    local deckX = 100
+    local deckX = 200
     local deckY = 700
     player.deck = DeckClass:new(deckX, deckY, name)
-    local discardPileX = 1200
+    local discardPileX = 1100
     local discardPileY = 700
     player.discardPile = DiscardPileClass:new(discardPileX, discardPileY, name)
     
   elseif name == "p2" then
-    local handX = 300
+    local handX = 350
     local handY = 30
     player.hand = HandClass:new(handX, handY, name)
-    local deckX = 100
+    local deckX = 200
     local deckY = 30
     player.deck = DeckClass:new(deckX, deckY, name)
-    local discardPileX = 1200
+    local discardPileX = 1100
     local discardPileY = 30
     player.discardPile = DiscardPileClass:new(discardPileX, discardPileY, name)
   end
@@ -65,3 +65,21 @@ end
 function PlayerClass:shuffle()
   --shuffling function
 end
+
+function PlayerClass:drawFromDeck(amount)
+  for i = 1, amount or 1 do
+    local card = self.deck:removeCard()
+    self.hand:addCard(card)
+  end
+end
+
+function PlayerClass:discard()
+  self.discardPile:addCard(self.cards[1])
+end
+
+function PlayerClass:draw()
+  
+end
+
+
+  

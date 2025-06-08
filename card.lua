@@ -9,6 +9,9 @@ CardClass = {}
 --  GRABBED = 2,
 --}
 
+halfCardWidth = 45
+halfCardHeight = 65
+
 function CardClass:new(name, cost, power, xPos, yPos, owner)
   local card = {}
   local metadata = {__index = self}
@@ -45,6 +48,13 @@ function CardClass:draw()
     self.image = self.backImage
     love.graphics.draw(self.image, self.position.x, self.position.y)
   end
+end
+
+function CardClass:checkWithinBounds(object)
+  return object.x > self.position.x and
+    object.x < self.position.x + self.size.x and
+    object.y > self.position.y and
+    object.y < self.position.y + self.size.y
 end
 
 function CardClass:flip()
