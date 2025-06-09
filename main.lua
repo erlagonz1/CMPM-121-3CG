@@ -7,6 +7,7 @@ io.stdout:setvbuf("no")
 math.randomseed(os.time())
 
 -- require calls to different files
+require "vector"
 require "card"
 require "player"
 require "location"
@@ -23,6 +24,7 @@ function love.load()
   blue = {0.35, 0.55, 7, 1}
   pink = {0.5, 0.0, 0.5, 1}
   tan = {0.61, 0.52, 0.41, 1}
+  yellow = {1, 1, 0, 1}
   
   smallFont = love.graphics.newFont(16)
   largeFont = love.graphics.newFont(24)
@@ -31,6 +33,8 @@ function love.load()
   love.graphics.setLineWidth(3)
   
   screenBounds = Vector(1400, 860)
+  halfCardWidth = 45
+  halfCardHeight = 65
   
   love.window.setMode(screenBounds.x, screenBounds.y)
   love.graphics.setBackgroundColor(tan)
@@ -41,8 +45,8 @@ function love.load()
   p2 = PlayerClass:new("p2") -- this is AI
   
   --shuffle cards
-  --p1:shuffle()
-  --p2:shuffle()
+  p1:shuffle()
+  p2:shuffle()
   
   -- add all cards to each player's deck
   for _, card in ipairs(p1.cards) do
@@ -54,11 +58,10 @@ function love.load()
   end
   
   -- remove three cards from each player's deck and add it to their hand
-  p1:drawFromDeck(7)
-  p2:drawFromDeck(7)
+  p1:drawFromDeck(3)
+  p2:drawFromDeck(3)
   
   -- initialize the locations
-  
   locations = {}
   location1 = LocationClass:new("Location 1", 50, screenBounds.y/2 + 5)
   location2 = LocationClass:new("Location 2", 500, screenBounds.y/2 + 5)
@@ -67,8 +70,8 @@ function love.load()
   table.insert(locations, location2)
   table.insert(locations, location3)
   
+  -- initialize the grabber and board
   grabber = GrabberClass:new()
-  
   board = BoardClass:new()
   
 end
@@ -76,6 +79,8 @@ end
 
 function love.update()
   grabber:update()
+  
+  board:update()
 end
 
 
@@ -95,8 +100,6 @@ function love.draw()
   location2:draw()
   location3:draw()
   
-  board:draw()
-  
   for _, card in ipairs(p1.cards) do
     card:draw()
   end
@@ -105,6 +108,14 @@ function love.draw()
     card:draw()
   end
   
+  board:draw()
 end
-  
 
+
+function love.mousepressed(x, y)
+  if board.state == "p1staging" and love.mouse.getX() >= 700 and love.mouse.getX() <= 800 and love.mouse.getY() >= 615 and love.mouse.getY() <= 655 then
+    board:submitTurn()
+  elseif board.state == "gameOver" and love.mouse.getX() >= 0 and love.mouse.getX() <= screenBounds.x and love.mouse.getY() >= 0 and love.mouse.getY() <= screenBounds.y then
+    love.load()
+  end
+end

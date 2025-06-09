@@ -29,6 +29,7 @@ function LocationClass:new(name, x, y)
   return location
 end
 
+
 function LocationClass:addCard(card)
   if card.owner == "p1" then
     table.insert(self.p1cards, card)
@@ -38,6 +39,47 @@ function LocationClass:addCard(card)
     card.position = self.p2positions[#self.p2cards]
   end
 end
+
+
+function LocationClass:removeCard(player)
+  if player == "p1" then
+    return table.remove(self.p1cards)
+  elseif player == "p2" then
+    return table.remove(self.p2cards)
+  end
+end
+
+
+function LocationClass:removeHighestCard(player)
+  if player == "p1" then
+    if #self.p1cards == 1 then
+      return table.remove(self.p1cards)
+    end
+    local highest = 1
+    local card = self.p1cards[1]
+    for i = 2, #self.p1cards do
+      if card.power <= self.p1cards[i].power then
+        highest = i
+      end
+      card = self.p1cards[i]
+    end
+    return table.remove(self.p1cards, highest)
+  elseif player == "p2" then
+    if #self.p2cards == 1 then
+      return table.remove(self.p2cards)
+    end
+    local highest = 1
+    local card = self.p2cards[1]
+    for i = 2, #self.p2cards do
+      if card.power <= self.p2cards[i].power then
+        highest = i
+      end
+      card = self.p2cards[i]
+    end
+    return table.remove(self.p2cards, highest)
+  end
+end
+
 
 function LocationClass:draw()
   love.graphics.setColor(blue)

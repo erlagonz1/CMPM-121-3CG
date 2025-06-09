@@ -18,11 +18,9 @@ end
 function DeckClass:addCard(card)
   table.insert(self.cards, card)
   card.position = self.position
-  print("card inserted and moved")
 end
 
 function DeckClass:removeCard()
-  print("card removed from deck")
   return table.remove(self.cards)
 end
 

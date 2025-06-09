@@ -40,7 +40,7 @@ function GrabberClass:grab()
   self.grabPos = self.currentMousePos
   
   for i = 1, #p1.hand.cards do
-    if p1.hand.cards[i]:checkWithinBounds(self.grabPos) then
+    if p1.hand.cards[i]:checkWithinBounds(self.grabPos) and board.state == "p1staging" then
       self.heldObject = p1.hand.cards[i]
       self.grabOffset = self.currentMousePos - p1.hand.cards[i].position
       self.cardIndex = i
@@ -64,8 +64,12 @@ function GrabberClass:release()
     if self.heldObject.position.x + halfCardWidth >= location.x and self.heldObject.position.x + halfCardWidth <= location.x + 400 and self.heldObject.position.y + halfCardHeight >= location.y and self.heldObject.position.y + halfCardHeight <= location.y + 134 then
       if self:isValidPlacement(location) then
         location:addCard(self.heldObject)
+        self.heldObject.location = location
+        board.p1stages[board.p1stageNum] = self.heldObject
         p1.mana = p1.mana - self.heldObject.cost
         p1.hand:reorganize()
+        board.p1stageNum = board.p1stageNum + 1
+        self.heldObject:flip()
         moved = true
         break
       end

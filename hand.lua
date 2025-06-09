@@ -31,14 +31,9 @@ function HandClass:addCard(card, position)
     table.insert(self.cards, card)
     card.position = self.positions[#self.cards]
   end
-  print("card added to hand")
-  
---  if #self.cards == 1 then
---    card.position = 
 end
 
 function HandClass:removeCard(index)
-  print("card removed from hand")
   return table.remove(self.cards, index)
 end
 
@@ -64,7 +59,4 @@ function HandClass:draw()
   end
   love.graphics.setFont(largeFont)
 end
-
-    
-    
     

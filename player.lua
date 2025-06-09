@@ -7,7 +7,7 @@ function PlayerClass:new(name)
   setmetatable(player, metadata)
   
   player.name = name
-  player.mana = 20
+  player.mana = 1
   player.points = 0
   player.cards = {
     WoodenCowClass:new(name),
@@ -64,12 +64,25 @@ end
 
 function PlayerClass:shuffle()
   --shuffling function
+  local cardCount = #self.cards
+  for i = 1, cardCount do
+    local randIndex = math.random(cardCount)
+    local temp = self.cards[randIndex]
+    self.cards[randIndex] = self.cards[cardCount]
+    self.cards[cardCount] = temp
+    cardCount = cardCount - 1
+  end
 end
 
 function PlayerClass:drawFromDeck(amount)
   for i = 1, amount or 1 do
-    local card = self.deck:removeCard()
-    self.hand:addCard(card)
+    if #self.hand.cards < 7 then
+      local card = self.deck:removeCard()
+      self.hand:addCard(card)
+      if self.name == "p1" then
+        card:flip()
+      end
+    end
   end
 end
 
