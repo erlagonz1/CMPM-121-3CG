@@ -4,14 +4,14 @@
 
 I used various programming patterns to make this casual collectible card game. All of these programming patterns listed are found in our course textbook:
 
-- Commands - I used these to implment grabbing and releasing of cards.
-- Update method - I used this to check for state changes in game mangement file (board.lua), as changes can happen at any time.
+- Commands - I used these to implement grabbing and releasing of cards.
+- Update method - I used this to check for state changes in the game mangement file (board.lua), as changes can happen at any time.
 - State - I used this to move between game states/phases. This allowed me to more easily implement logic for when the players are supposed to be staging cards, are battling, and for tracking if the game is complete.
-- Subclass Sandbox - I used this to implement all of the cards. Specifically, I overrode the reveal function so that each card subclass had it's own implementation of reveal.
+- Subclass Sandbox - I used this to implement all of the cards. Specifically, I overrode the reveal function so that each card subclass had its own implementation of reveal.
 
 <h2>Peer Feedback:</h2>
 
-The people who gave me feedback are Nathan Skinner, Cassian Jones, and Ayush Bandopadhyay, and Cassian Jones. In terms of suggestions, they gave similar feedback. They said that a key programming pattern that they used was the subclass sandbox pattern. I took this feedback and made sure that I used the pattern, which can be seen in the reveal functions of each card. They also said that an event queue would be nice as well, for all the staging/revealing of cards. They also suggested that I read in the card data from an external file. I wasn't able to figure this out before submitting the project, but it is something that I plan on implementing in the final project as an improvement. Other feedback they gave is that they think the code is very well organized and readible. They commented that my variable names, file names, and function names all make sense and have good structure.
+The people who gave me feedback are Nathan Skinner, Cassian Jones, and Ayush Bandopadhyay. In terms of suggestions, they gave similar feedback. They said that a key programming pattern that they used was the subclass sandbox pattern. I took this feedback and made sure that I used the pattern, which can be seen in the reveal functions of each card. They also said that an event queue would be nice as well, for all the staging/revealing of cards. They also suggested that I read in the card data from an external file. I wasn't able to figure this out before submitting the project, but it is something that I plan on implementing in the final project as an improvement. Other feedback they gave is that they think the code is very well organized and readable. They commented that my variable names, file names, and function names all make sense and have good structure.
 
 <h2>Postmortem:</h2>
 
