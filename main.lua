@@ -16,6 +16,12 @@ require "board"
 
 function love.load()
   
+  music = love.audio.newSource('Sound/fantasyBGM.mp3', 'stream')
+  music:setLooping(true)
+  music:play()
+  
+  buttonSFX = love.audio.newSource('Sound/buttonSFX.mp3', 'static')
+  
   -- color definitions
   white = {1, 1, 1, 1}
   black = {0, 0, 0, 1}
@@ -114,6 +120,7 @@ end
 
 function love.mousepressed(x, y)
   if board.state == "p1staging" and love.mouse.getX() >= 700 and love.mouse.getX() <= 800 and love.mouse.getY() >= 615 and love.mouse.getY() <= 655 then
+    buttonSFX:play()
     board:submitTurn()
   elseif board.state == "gameOver" and love.mouse.getX() >= 0 and love.mouse.getX() <= screenBounds.x and love.mouse.getY() >= 0 and love.mouse.getY() <= screenBounds.y then
     love.load()
