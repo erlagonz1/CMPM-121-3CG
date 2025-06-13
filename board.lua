@@ -1,4 +1,3 @@
-
 BoardClass = {}
 
 function BoardClass:new()
@@ -165,54 +164,45 @@ end
 
 
 function BoardClass:draw()
-  -- draw p1 attributes
-  love.graphics.setColor(blue)
-  love.graphics.line(0, screenBounds.y/2 + 1, screenBounds.x, screenBounds.y/2 + 1)
-  love.graphics.setFont(hugeFont)
-  love.graphics.printf(tostring(p1.mana), 15, screenBounds.y - 115, 150, "center")
-  love.graphics.printf(tostring(p1.points), screenBounds.x - 170, screenBounds.y - 115, 150, "center")
-  love.graphics.setColor(white)
-  love.graphics.setFont(largeFont)
-  love.graphics.printf("Mana", 15, screenBounds.y - 130, 150, "center")
-  love.graphics.printf("Points", screenBounds.x - 170, screenBounds.y - 130, 150, "center")
-  love.graphics.printf("Player 1", 15, screenBounds.y - 240, 150, "center")
-    
-  -- draw p2 attributes
-  love.graphics.setColor(pink)
-  love.graphics.line(0, screenBounds.y/2 - 1, screenBounds.x, screenBounds.y/2 - 1)
-  love.graphics.setFont(hugeFont)
-  love.graphics.printf(tostring(p2.mana), 15, 5, 150, "center")
-  love.graphics.printf(tostring(p2.points), screenBounds.x - 170, 5, 150, "center")
-  love.graphics.setColor(white)
-  love.graphics.setFont(largeFont)
-  love.graphics.printf("Mana", 15, 105, 150, "center")
-  love.graphics.printf("Points", screenBounds.x - 170, 105, 150, "center") 
-  love.graphics.printf("Player 2", 15, 210, 150, "center")
-
-  -- draw the rest of the board features
-  if p1.moved then
-    love.graphics.setColor(red)
-  else
-    love.graphics.setColor(green)
-  end
-  love.graphics.rectangle("fill", 700, 615, 100, 50)
-  love.graphics.setColor(white)
-  love.graphics.setFont(largeFont)
-  love.graphics.printf("Submit", 706, 625, 150, "left")
-  love.graphics.printf("Turn " .. tostring(self.turn), 600, 625, 150, "left")
   
-  -- draw win screen
-  love.graphics.setColor(yellow) 
-  love.graphics.setFont(love.graphics.newFont(150))
-  if self.state == "gameOver" and p1.points >= p2.points then
-    love.graphics.printf("You Won!", 215, 340, 1000, "center")
-    love.graphics.setFont(love.graphics.newFont(90))
-    love.graphics.printf("Click anywhere to play again", 35, 500, 2000, "left")
-  elseif self.state == "gameOver" and p2.points > p1.points then
-    love.graphics.printf("You Lost!", 215, 340, 1000, "center")
-    love.graphics.setFont(love.graphics.newFont(90))
-    love.graphics.printf("Click anywhere to play again", 35, 500, 2000, "left")
+  if self.state ~= "gameOver" then
+    -- draw p1 attributes
+    love.graphics.setColor(blue)
+    love.graphics.line(0, screenBounds.y/2 + 1, screenBounds.x, screenBounds.y/2 + 1)
+    love.graphics.setFont(hugeFont)
+    love.graphics.printf(tostring(p1.mana), 15, screenBounds.y - 115, 150, "center")
+    love.graphics.printf(tostring(p1.points), screenBounds.x - 170, screenBounds.y - 115, 150, "center")
+    love.graphics.setColor(white)
+    love.graphics.setFont(largeFont)
+    love.graphics.printf("Mana", 15, screenBounds.y - 130, 150, "center")
+    love.graphics.printf("Points", screenBounds.x - 170, screenBounds.y - 130, 150, "center")
+    love.graphics.printf("Player 1", 15, screenBounds.y - 240, 150, "center")
+      
+    -- draw p2 attributes
+    love.graphics.setColor(pink)
+    love.graphics.line(0, screenBounds.y/2 - 1, screenBounds.x, screenBounds.y/2 - 1)
+    love.graphics.setFont(hugeFont)
+    love.graphics.printf(tostring(p2.mana), 15, 5, 150, "center")
+    love.graphics.printf(tostring(p2.points), screenBounds.x - 170, 5, 150, "center")
+    love.graphics.setColor(white)
+    love.graphics.setFont(largeFont)
+    love.graphics.printf("Mana", 15, 105, 150, "center")
+    love.graphics.printf("Points", screenBounds.x - 170, 105, 150, "center") 
+    love.graphics.printf("Player 2", 15, 210, 150, "center")
+
+    -- draw the rest of the board features
+    if p1.moved then
+      love.graphics.setColor(red)
+    else
+      love.graphics.setColor(green)
+    end
+    love.graphics.rectangle("fill", 700, 615, 100, 50)
+    love.graphics.setColor(white)
+    love.graphics.setFont(largeFont)
+    love.graphics.printf("Submit", 706, 625, 150, "left")
+    love.graphics.printf("Turn " .. tostring(self.turn), 600, 625, 150, "left")
   end
+  
   love.graphics.setColor(white)
   love.graphics.setFont(largeFont)
 end

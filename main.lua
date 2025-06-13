@@ -35,6 +35,8 @@ function love.load()
   smallFont = love.graphics.newFont(16)
   largeFont = love.graphics.newFont(24)
   hugeFont = love.graphics.newFont(100)
+  titleFont = love.graphics.newFont(80)
+  mediumFont = love.graphics.newFont(32)
   
   love.graphics.setLineWidth(3)
   
@@ -46,6 +48,15 @@ function love.load()
   love.graphics.setBackgroundColor(tan)
   love.window.setTitle("Mythological Showdown v0.5")
   
+  -- Game state system
+  gameState = "title" -- can be "title", "playing", or "gameOver"
+  titlePulse = 0 -- for pulsing effect
+  creditsScroll = 0 -- for scrolling credits
+  
+  initializeGame()
+end
+
+function initializeGame()
   -- make p1 and p2 objects
   p1 = PlayerClass:new("p1")
   p2 = PlayerClass:new("p2") -- this is AI
@@ -80,19 +91,54 @@ function love.load()
   grabber = GrabberClass:new()
   board = BoardClass:new()
   
+  -- Reset credits scroll
+  creditsScroll = 0
 end
 
-
-function love.update()
-  grabber:update()
-  
-  board:update()
+function love.update(dt)
+  if gameState == "title" then
+    titlePulse = titlePulse + dt * 3 -- Speed of pulse
+  elseif gameState == "playing" then
+    grabber:update()
+    board:update()
+    
+    -- Check if game is over
+    if board.state == "gameOver" then
+      gameState = "gameOver"
+    end
+  end
 end
-
-
 
 function love.draw()
+  if gameState == "title" then
+    drawTitleScreen()
+  elseif gameState == "playing" then
+    drawGameScreen()
+  elseif gameState == "gameOver" then
+    drawGameOverScreen()
+  end
+end
+
+function drawTitleScreen()
+  -- Draw title
+  love.graphics.setColor(yellow)
+  love.graphics.setFont(titleFont)
+  love.graphics.printf("MYTHICAL CARD", 0, 200, screenBounds.x, "center")
+  love.graphics.printf("SHOWDOWN", 0, 300, screenBounds.x, "center")
   
+  -- Pulsing "Press to Start" button
+  local pulseAlpha = 0.5 + 0.5 * math.sin(titlePulse)
+  love.graphics.setColor(white[1], white[2], white[3], pulseAlpha)
+  love.graphics.setFont(mediumFont)
+  love.graphics.printf("Press Any Key to Start", 0, 500, screenBounds.x, "center")
+  
+  -- Version info
+  love.graphics.setColor(white)
+  love.graphics.setFont(smallFont)
+  love.graphics.printf("v1.0", screenBounds.x - 100, screenBounds.y - 30, 100, "center")
+end
+
+function drawGameScreen()
   p1.deck:draw()
   p2.deck:draw()
   
@@ -117,12 +163,59 @@ function love.draw()
   board:draw()
 end
 
+function drawGameOverScreen()
+  -- game result
+  love.graphics.setColor(yellow) 
+  love.graphics.setFont(love.graphics.newFont(150))
+  if p1.points >= p2.points then
+    love.graphics.printf("You Won!", 0, 200, screenBounds.x, "center")
+  else
+    love.graphics.printf("You Lost!", 0, 200, screenBounds.x, "center")
+  end
+  
+  -- final scores
+  love.graphics.setFont(mediumFont)
+  love.graphics.printf("Final Score: " .. p1.points .. " - " .. p2.points, 0, 380, screenBounds.x, "center")
+  
+  -- credits
+  love.graphics.setFont(largeFont)
+  local creditY = 500
+  
+  love.graphics.printf("CREDITS", 0, creditY, screenBounds.x, "center")
+  love.graphics.printf("Created by", 0, creditY + 60, screenBounds.x, "center")
+  love.graphics.printf("Eric Gonzalez", 0, creditY + 100, screenBounds.x, "center")
+  love.graphics.printf("and", 0, creditY + 140, screenBounds.x, "center")
+  love.graphics.printf("Ayush Bandopadhyay", 0, creditY + 180, screenBounds.x, "center")
+  
+  love.graphics.setFont(mediumFont)
+  love.graphics.printf("Press Any Key to Play Again", 0, 750, screenBounds.x, "center")
+  
+  love.graphics.setColor(white)
+end
 
 function love.mousepressed(x, y)
-  if board.state == "p1staging" and love.mouse.getX() >= 700 and love.mouse.getX() <= 800 and love.mouse.getY() >= 615 and love.mouse.getY() <= 655 then
+  if gameState == "title" then
     buttonSFX:play()
-    board:submitTurn()
-  elseif board.state == "gameOver" and love.mouse.getX() >= 0 and love.mouse.getX() <= screenBounds.x and love.mouse.getY() >= 0 and love.mouse.getY() <= screenBounds.y then
-    love.load()
+    gameState = "playing"
+  elseif gameState == "playing" then
+    if board.state == "p1staging" and love.mouse.getX() >= 700 and love.mouse.getX() <= 800 and love.mouse.getY() >= 615 and love.mouse.getY() <= 655 then
+      buttonSFX:play()
+      board:submitTurn()
+    end
+  elseif gameState == "gameOver" then
+    buttonSFX:play()
+    initializeGame()
+    gameState = "playing"
+  end
+end
+
+function love.keypressed(key)
+  if gameState == "title" then
+    buttonSFX:play()
+    gameState = "playing"
+  elseif gameState == "gameOver" then
+    buttonSFX:play()
+    initializeGame()
+    gameState = "playing"
   end
 end
