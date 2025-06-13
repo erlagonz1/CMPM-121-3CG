@@ -20,5 +20,7 @@ Something I did well is my code structure. I think I did a good job in regards t
 
 <h2>Assets</h2>
 - Sprites: I made all the sprites on piskel.com and photopea.com, which are free sprite editors. <br>
-- Music: There is no background music. <br>
-- SFX: There are no sound effects.
+- Music: Fantasy Ambiance from https://www.fesliyanstudios.com/royalty-free-music/download/fantasy-ambience/1702 <br>
+- SFX: <br>
+  - Card sound effect(https://pixabay.com/sound-effects/sd-card-sounds-38745/) <br>
+  - Button sound effect(https://pixabay.com/sound-effects/old-radio-button-click-97549/)

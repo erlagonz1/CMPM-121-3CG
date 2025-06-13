@@ -12,6 +12,9 @@ function GrabberClass:new()
   grabber.grabOffset = nil
   grabber.cardIndex = nil
   
+  grabber.grabSFX = love.audio.newSource("Sound/pickUpSFX.mp3", "static")
+  grabber.dropSFX = love.audio.newSource("Sound/putDownSFX.mp3", "static")
+
   return grabber
 end
 
@@ -30,6 +33,9 @@ function GrabberClass:update()
   end
   
   if not love.mouse.isDown(1) and self.heldObject then
+    	if not self.dropSFX:isPlaying() then
+      love.audio.play(self.dropSFX)
+    end
     self:release()
   end
   
@@ -41,6 +47,11 @@ function GrabberClass:grab()
   
   for i = 1, #p1.hand.cards do
     if p1.hand.cards[i]:checkWithinBounds(self.grabPos) and board.state == "p1staging" then
+      
+      if not self.grabSFX:isPlaying() then
+        love.audio.play(self.grabSFX)
+      end
+      
       self.heldObject = p1.hand.cards[i]
       self.grabOffset = self.currentMousePos - p1.hand.cards[i].position
       self.cardIndex = i
