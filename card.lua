@@ -14,7 +14,7 @@ function CardClass:new(name, cost, power, xPos, yPos, owner)
   card.owner = owner
   card.location = nil
   
-  card.backImage = love.graphics.newImage("Sprites/CardBack.png")
+  card.backImage = love.graphics.newImage("Sprites/cardBack.png")
   card.frontImage = love.graphics.newImage("Sprites/" .. name .. ".png")
   card.image = card.backImage
   card.faceUp = false
@@ -54,6 +54,7 @@ end
 
 function CardClass:reveal()
   self:flip()
+  noticeManager:add("No effect")
   print("No effect")
 end
 
@@ -119,6 +120,7 @@ function ZeusClass:reveal()
       card.power = card.power - 1
     end
   end
+  noticeManager:add("Zeus lowers the power of each card in the opponent's hand by 1!")
   print("Zeus lowers the power of each card in the opponent's hand by 1!")
 end
 
@@ -139,6 +141,7 @@ function AresClass:reveal()
   else
     self.power = self.power + (2 * #self.location.p1cards)
   end
+  noticeManager:add("Ares gains +2 power for each enemy card at this location!")
   print("Ares gains +2 power for each enemy card at this location!")
 end
 
@@ -171,6 +174,7 @@ function PoseidonClass:reveal()
       end
     end
   end
+  noticeManager:add("Poseidon moves away an enemy card here with the lowest power!")
   print("Poseidon moves away an enemy card here with the lowest power!")
 end
 
@@ -195,6 +199,7 @@ function ArtemisClass:reveal()
       self.power = self.power + 5
     end
   end
+  noticeManager:add("Artemis gains +5 power if there is one opposing card here!")
   print("Artemis gains +5 power if there is one opposing card here!")
 end
 
@@ -219,6 +224,7 @@ function HeraClass:reveal()
       card.power = card.power + 1
     end
   end
+  noticeManager:add("Hera gives cards in " .. self.owner .. "'s hand +1 power!")
   print("Hera gives cards in " .. self.owner .. "'s hand +1 power!")
 end
 
@@ -239,6 +245,7 @@ function HadesClass:reveal()
   else
     self.power = self.power + (2 * #p2.discardPile.cards)
   end
+  noticeManager:add("Hades gains +2 power for each card in " .. self.owner .. "'s discard pile!")
   print("Hades gains +2 power for each card in " .. self.owner .. "'s discard pile!")
 end
 
@@ -270,6 +277,7 @@ function HerculesClass:reveal()
   if strongest then
     self.power = self.power * 2
   end
+  noticeManager:add("Hercules doubles its power if it is the strongest card here!")
   print("Hercules doubles its power if it is the strongest card here!")
 end
 
@@ -290,6 +298,7 @@ function DionysusClass:reveal()
   else
     self.power = self.power + (2 * (#self.location.p2cards - 1))
   end
+  noticeManager:add("Dionysus gains +2 power for each of " .. self.owner .. "'s other cards here!")
   print("Dionysus gains +2 power for each of " .. self.owner .. "'s other cards here!")
 end
 
@@ -322,6 +331,7 @@ function HermesClass:reveal()
         end
       end
       if i == 3 then
+        noticeManager:add("Hermes tried to move locations but other locations were full! Hermes goes away...")
         print("Hermes tried to move locations but other locations were full! Hermes goes away...")
       end
     end
@@ -341,10 +351,12 @@ function HermesClass:reveal()
         end
       end
       if i == 3 then
+        noticeManager:add("Hermes tried to move locations but other locations were full! Hermes goes away...")
         print("Hermes tried to move locations but other locations were full! Hermes goes away...")
       end
     end
   end
+  noticeManager:add("Hermes moves to another location!")
   print("Hermes moves to another location!")
 end
 
@@ -366,6 +378,7 @@ function MidasClass:reveal()
   for _, card in ipairs(self.location.p2cards) do
     card.power = 3
   end
+  noticeManager:add("Midas sets all cards here to 3 power!")
   print("Midas sets all cards here to 3 power!")
 end
 
@@ -390,6 +403,7 @@ function AphroditeClass:reveal()
       card.power = card.power - 1
     end
   end
+  noticeManager:add("Aphrodite lowers the power of each enemy card here by 1!")
   print("Aphrodite lowers the power of each enemy card here by 1!")
 end
 
@@ -410,6 +424,7 @@ function PandoraClass:reveal()
   elseif self.owner == "p2" and #self.location.p2cards == 1 then
     self.power = self.power - 5
   end
+  noticeManager:add("Pandora's power gets lowered by 5 if no allies are here!")
   print("Pandora's power gets lowered by 5 if no allies are here!")
 end
 

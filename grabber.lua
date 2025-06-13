@@ -44,6 +44,7 @@ end
 
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
+  local removedCard = nil
   
   for i = 1, #p1.hand.cards do
     if p1.hand.cards[i]:checkWithinBounds(self.grabPos) and board.state == "p1staging" then
@@ -55,7 +56,14 @@ function GrabberClass:grab()
       self.heldObject = p1.hand.cards[i]
       self.grabOffset = self.currentMousePos - p1.hand.cards[i].position
       self.cardIndex = i
-      p1.hand:removeCard(i)
+      removedCard = p1.hand:removeCard(i)
+      
+      for j = 1, #p1.cards do
+        if p1.cards[j] == removedCard then
+          table.remove(p1.cards, j)
+          table.insert(p1.cards, removedCard)
+        end
+      end
       
       break
     end

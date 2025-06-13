@@ -1,3 +1,4 @@
+
 BoardClass = {}
 
 function BoardClass:new()

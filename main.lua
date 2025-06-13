@@ -13,14 +13,15 @@ require "player"
 require "location"
 require "grabber"
 require "board"
+require "noticeManager"
 
 function love.load()
   
-  music = love.audio.newSource('Sound/fantasyBGM.mp3', 'stream')
+  music = love.audio.newSource("Sound/fantasyBGM.mp3", "stream")
   music:setLooping(true)
   music:play()
   
-  buttonSFX = love.audio.newSource('Sound/buttonSFX.mp3', 'static')
+  buttonSFX = love.audio.newSource("Sound/buttonSFX.mp3", "static")
   
   -- color definitions
   white = {1, 1, 1, 1}
@@ -32,6 +33,7 @@ function love.load()
   tan = {0.61, 0.52, 0.41, 1}
   yellow = {1, 1, 0, 1}
   
+  tinyFont = love.graphics.newFont(13)
   smallFont = love.graphics.newFont(16)
   largeFont = love.graphics.newFont(24)
   hugeFont = love.graphics.newFont(100)
@@ -46,7 +48,7 @@ function love.load()
   
   love.window.setMode(screenBounds.x, screenBounds.y)
   love.graphics.setBackgroundColor(tan)
-  love.window.setTitle("Mythological Showdown v0.5")
+  love.window.setTitle("Mythological Showdown v1.0")
   
   -- Game state system
   gameState = "title" -- can be "title", "playing", or "gameOver"
@@ -55,6 +57,7 @@ function love.load()
   
   initializeGame()
 end
+
 
 function initializeGame()
   -- make p1 and p2 objects
@@ -87,13 +90,15 @@ function initializeGame()
   table.insert(locations, location2)
   table.insert(locations, location3)
   
-  -- initialize the grabber and board
+  -- initialize the grabber, board, and notice manager
   grabber = GrabberClass:new()
   board = BoardClass:new()
+  noticeManager = NoticeManager:new()
   
   -- Reset credits scroll
   creditsScroll = 0
 end
+
 
 function love.update(dt)
   if gameState == "title" then
@@ -101,13 +106,15 @@ function love.update(dt)
   elseif gameState == "playing" then
     grabber:update()
     board:update()
-    
+    noticeManager:update(dt)
     -- Check if game is over
     if board.state == "gameOver" then
       gameState = "gameOver"
     end
   end
 end
+
+
 
 function love.draw()
   if gameState == "title" then
@@ -119,24 +126,26 @@ function love.draw()
   end
 end
 
+
 function drawTitleScreen()
   -- Draw title
   love.graphics.setColor(yellow)
   love.graphics.setFont(titleFont)
-  love.graphics.printf("MYTHICAL CARD", 0, 200, screenBounds.x, "center")
+  love.graphics.printf("MYTHOLOGICAL", 0, 200, screenBounds.x, "center")
   love.graphics.printf("SHOWDOWN", 0, 300, screenBounds.x, "center")
   
   -- Pulsing "Press to Start" button
   local pulseAlpha = 0.5 + 0.5 * math.sin(titlePulse)
   love.graphics.setColor(white[1], white[2], white[3], pulseAlpha)
   love.graphics.setFont(mediumFont)
-  love.graphics.printf("Press Any Key to Start", 0, 500, screenBounds.x, "center")
+  love.graphics.printf("Click Anywhere to Start", 0, 500, screenBounds.x, "center")
   
   -- Version info
   love.graphics.setColor(white)
   love.graphics.setFont(smallFont)
   love.graphics.printf("v1.0", screenBounds.x - 100, screenBounds.y - 30, 100, "center")
 end
+
 
 function drawGameScreen()
   p1.deck:draw()
@@ -152,16 +161,19 @@ function drawGameScreen()
   location2:draw()
   location3:draw()
   
-  for _, card in ipairs(p1.cards) do
-    card:draw()
-  end
+  board:draw()
   
   for _, card in ipairs(p2.cards) do
     card:draw()
   end
   
-  board:draw()
+  for _, card in ipairs(p1.cards) do
+    card:draw()
+  end
+  
+  noticeManager:draw()
 end
+
 
 function drawGameOverScreen()
   -- game result
@@ -188,7 +200,7 @@ function drawGameOverScreen()
   love.graphics.printf("Ayush Bandopadhyay", 0, creditY + 180, screenBounds.x, "center")
   
   love.graphics.setFont(mediumFont)
-  love.graphics.printf("Press Any Key to Play Again", 0, 750, screenBounds.x, "center")
+  love.graphics.printf("Click Anywhere to Play Again", 0, 750, screenBounds.x, "center")
   
   love.graphics.setColor(white)
 end
@@ -202,17 +214,6 @@ function love.mousepressed(x, y)
       buttonSFX:play()
       board:submitTurn()
     end
-  elseif gameState == "gameOver" then
-    buttonSFX:play()
-    initializeGame()
-    gameState = "playing"
-  end
-end
-
-function love.keypressed(key)
-  if gameState == "title" then
-    buttonSFX:play()
-    gameState = "playing"
   elseif gameState == "gameOver" then
     buttonSFX:play()
     initializeGame()
