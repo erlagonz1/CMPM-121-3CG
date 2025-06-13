@@ -194,11 +194,18 @@ function drawGameOverScreen()
 end
 
 function love.mousepressed(x, y)
-  if gameState == "playing" then
+  if gameState == "title" then
+    buttonSFX:play()
+    gameState = "playing"
+  elseif gameState == "playing" then
     if board.state == "p1staging" and love.mouse.getX() >= 700 and love.mouse.getX() <= 800 and love.mouse.getY() >= 615 and love.mouse.getY() <= 655 then
       buttonSFX:play()
       board:submitTurn()
     end
+  elseif gameState == "gameOver" then
+    buttonSFX:play()
+    initializeGame()
+    gameState = "playing"
   end
 end
 
